@@ -1,6 +1,6 @@
-# main.py
 import os
-from flask import Flask, request, jsonify
+import json
+from flask import Flask, request, Response
 from google.cloud import pubsub_v1
 import base64
 
@@ -49,15 +49,28 @@ def pull_messages():
                     "ack_ids": ack_ids
                 }
             )
-            return jsonify({
+            response_data = {
                 "status": f"Successfully pulled and acknowledged {len(pulled_messages)} messages.",
                 "messages": pulled_messages
-            }), 200
+            }
         else:
-            return jsonify({"status": "No messages to pull from the subscription."}), 200
+            response_data = {"status": "No messages to pull from the subscription."}
+
+        return Response(
+            response=json.dumps(response_data, indent=4, sort_keys=True),
+            status=200,
+            mimetype='application/json'
+        )
 
     except Exception as e:
-        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+        error_response = {
+            "error": f"An error occurred: {str(e)}"
+        }
+        return Response(
+            response=json.dumps(error_response, indent=4),
+            status=500,
+            mimetype='application/json'
+        )
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8080)
