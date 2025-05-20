@@ -7,12 +7,16 @@ import time
 subscription_id = os.environ.get("projects/others-459904/subscriptions/test-1595-2")
 project_id = os.environ.get("others-459904")
 
+def process_message(message_data):
+    """Your application-level message processing logic."""
+    print(f"Processing message: {message_data.decode('utf-8')}")
+    time.sleep(3)  # Simulate processing
+
 def callback(message: pubsub_v1.subscriber.message.Message):
-    print(f"Received message: {message.data.decode('utf-8')}")
-    # Simulate message processing
-    time.sleep(2)
+    print(f"Received message ID: {message.id}")
+    process_message(message.data)
     message.ack()
-    print(f"Acknowledged message: {message.id}")
+    print(f"Acknowledged message ID: {message.id}")
 
 def main():
     if not subscription_id or not project_id:
