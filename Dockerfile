@@ -1,17 +1,11 @@
-# Use the official lightweight Python image
-FROM python:3.9-slim
+FROM python:3.10-slim
 
-# Set the working directory
 WORKDIR /app
 
-# Copy local code to the container image
-COPY . .
-
-# Install dependencies
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Set environment variables
-ENV PYTHONUNBUFFERED=1
+COPY app/ .
 
-# Run the web service on container startup using gunicorn
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 main:app
+ENV PORT=8080
+CMD ["python", "main.py"]
