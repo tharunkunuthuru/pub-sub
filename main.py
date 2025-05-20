@@ -18,7 +18,7 @@ subscription_path = subscriber.subscription_path(PROJECT_ID, SUBSCRIPTION_ID)
 def index():
     return "Pub/Sub Message Puller Application. Send a POST request to /pull-messages to pull messages."
 
-@app.route('/pull-messages', methods=['GET'])
+@app.route('/pull-messages', methods=['POST'])
 def pull_messages():
     if not PROJECT_ID or not SUBSCRIPTION_ID:
         return jsonify({"error": "PROJECT_ID or PUBSUB_SUBSCRIPTION_ID environment variables are not set."}), 500
