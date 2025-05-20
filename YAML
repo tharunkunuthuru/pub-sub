@@ -1,32 +1,28 @@
 steps:
-  # Build the Docker image
+  # Step 1: Build Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/pubsub-pull-app', '.']
+    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/pubsub-pull-app', '.' ]
 
-  # Push the Docker image to Google Container Registry (GCR)
+  # Step 2: Push Docker image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/pubsub-pull-app']
+    args: [ 'push', 'gcr.io/$PROJECT_ID/pubsub-pull-app' ]
 
-  # Deploy the application to Google Cloud Run
-  - name: 'gcr.io/google-cloud-sdk'
-    entrypoint: 'gcloud'
+  # Step 3: Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
     args:
       - 'run'
       - 'deploy'
-      - 'pubsub-pull-service'
+      - 'pubsub-pull-app'
       - '--image'
       - 'gcr.io/$PROJECT_ID/pubsub-pull-app'
       - '--platform'
       - 'managed'
       - '--region'
-      - 'asia-south1' # Change to your desired region
+      - 'us-central1'
+      - '--allow-unauthenticated'
       - '--set-env-vars'
-      - 'GOOGLE_CLOUD_PROJECT=$PROJECT_ID,PUBSUB_SUBSCRIPTION_ID=YOUR_SUBSCRIPTION_ID' # Replace YOUR_SUBSCRIPTION_ID
-      - '--min-instances'
-      - '1'
-    # Optional: Specify service account if needed
-    # securityContext:
-    #   runAsUser: 'YOUR_SERVICE_ACCOUNT_EMAIL'
+      - 'PROJECT_ID=$PROJECT_ID,SUBSCRIPTION_ID=your-subscription-id'
 
-options:
-  logging: CLOUD_LOGGING_ONLY
+images:
+  - 'gcr.io/$PROJECT_ID/pubsub-pull-app'
