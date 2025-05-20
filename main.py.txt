@@ -1,0 +1,35 @@
+# main.py
+from google.cloud import pubsub_v1
+import os
+import time
+
+# Environment variable for the subscription ID
+subscription_id = os.environ.get("projects/others-459904/subscriptions/test-1595-2")
+project_id = os.environ.get("others-459904")
+
+def callback(message: pubsub_v1.subscriber.message.Message):
+    print(f"Received message: {message.data.decode('utf-8')}")
+    # Simulate message processing
+    time.sleep(2)
+    message.ack()
+    print(f"Acknowledged message: {message.id}")
+
+def main():
+    if not subscription_id or not project_id:
+        print("Error: PUBSUB_SUBSCRIPTION_ID and GOOGLE_CLOUD_PROJECT environment variables must be set.")
+        return
+
+    subscriber = pubsub_v1.SubscriberClient()
+    subscription_path = subscriber.subscription_path(project_id, subscription_id)
+
+    streaming_pull_future = subscriber.subscribe(subscription_path, callback=callback)
+    print(f"Listening for messages on {subscription_path}...")
+
+    try:
+        streaming_pull_future.result()
+    except Exception as e:
+        streaming_pull_future.cancel()
+        print(f"Error: {e}")
+
+if __name__ == "__main__":
+    main()
