@@ -9,11 +9,11 @@ steps:
     entrypoint: 'gcloud'
     args:
       [
-        'run', 'deploy', 'pubsub-pull-app',
+        'run', 'deploy', 'pub-sub',
         '--image', 'gcr.io/$PROJECT_ID/pubsub-pull-app',
         '--region', 'us-central1',
         '--allow-unauthenticated',
-        '--set-env-vars', 'SUBSCRIPTION_ID='my-first-test-1595-sub',
+        '--set-env-vars', 'SUBSCRIPTION_ID=my-first-test-1595-sub'
       ]
 
 images:
