@@ -22,7 +22,7 @@ steps:
       - 'us-central1'
       - '--allow-unauthenticated'
       - '--set-env-vars'
-      - 'PROJECT_ID=$PROJECT_ID,SUBSCRIPTION_ID=your-subscription-id'
+      - 'PROJECT_ID=$PROJECT_ID,SUBSCRIPTION_ID=projects/others-459904/subscriptions/first-test1595-sub'
 
 images:
   - 'gcr.io/$PROJECT_ID/pubsub-pull-app'
