@@ -4,15 +4,15 @@ import threading
 import time
 import os
 
-PROJECT_ID = os.environ.get("others-459904")
-SUBSCRIPTION_ID = os.environ.get("first-sub-1595")
+PROJECT_ID = os.environ.get("PROJECT_ID")
+SUBSCRIPTION_ID = os.environ.get("SUBSCRIPTION_ID")
 
 app = Flask(__name__)
 
 def pull_messages():
     print("✅ Pull thread started")
     print(f"🔧 Using PROJECT_ID = {PROJECT_ID}, SUBSCRIPTION_ID = {SUBSCRIPTION_ID}")
-    
+
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(PROJECT_ID, SUBSCRIPTION_ID)
     print(f"🧪 Subscribing to: {subscription_path}")
