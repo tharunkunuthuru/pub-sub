@@ -1,20 +1,21 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/pubsub-pull-app', '.']
-
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/pubsub-viewer-app', '.']
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/pubsub-pull-app']
-
+    args: ['push', 'gcr.io/$PROJECT_ID/pubsub-viewer-app']
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: 'gcloud'
+    entrypoint: gcloud
     args:
       [
-        'run', 'deploy', 'pub-sub',
-        '--image', 'gcr.io/$PROJECT_ID/pubsub-pull-app',
+        'run', 'deploy', 'pubsub-viewer-app',
+        '--image', 'gcr.io/$PROJECT_ID/pubsub-viewer-app',
+        '--platform', 'managed',
         '--region', 'us-central1',
         '--allow-unauthenticated',
-        '--set-env-vars', 'SUBSCRIPTION_ID=my-first-test-1595-sub'
+        '--memory', '256Mi',
+        '--timeout', '300',
+        '--set-env-vars', 'GCP_PROJECT_ID=$PROJECT_ID,PUBSUB_SUBSCRIPTION_ID=my-first-test-1595-sub'
       ]
 
 images:
-  - gcr.io/$PROJECT_ID/pubsub-pull-app
+  - gcr.io/$PROJECT_ID/pubsub-viewer-app
