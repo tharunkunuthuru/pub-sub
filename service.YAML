@@ -11,7 +11,90 @@ spec:
             - name: GOOGLE_CLOUD_PROJECT
               value: "others-459904"
             - name: PUBSUB_SUBSCRIPTION_ID
+              value: "apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: pubsub-pull-service
+spec:
+  template:
+    spec:
+      containers:
+        - image: gcr.io/PROJECT_ID/pubsub-pull-service
+          env:
+            - name: GOOGLE_CLOUD_PROJECT
+              value: "PROJECT_ID"
+            - name: PUBSUB_SUBSCRIPTION_ID
+              value: "apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: pubsub-pull-service
+spec:
+  template:
+    spec:
+      containers:
+        - image: gcr.io/PROJECT_ID/pubsub-pull-service
+          env:
+            - name: GOOGLE_CLOUD_PROJECT
+              value: "PROJECT_ID"
+            - name: PUBSUB_SUBSCRIPTION_ID
               value: "my-first-test-1595-sub"
+            # Enable detailed logging
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: PYTHONIOENCODING
+              value: "UTF-8"
+          resources:
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+          # Configure the container for proper scaling
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            periodSeconds: 30
+      serviceAccountName: pubsub-sa  # Use a custom service account with Pub/Sub permissions
+      # Set timeout to maximum allowed (15 minutes) for long-running tasks
+      timeoutSeconds: 900
+      # Set concurrency to handle parallel requests
+      containerConcurrency: 80"
+            # Enable detailed logging
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: PYTHONIOENCODING
+              value: "UTF-8"
+          resources:
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+          # Configure the container for proper scaling
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            periodSeconds: 30
+      serviceAccountName: pubsub-sa  # Use a custom service account with Pub/Sub permissions
+      # Set timeout to maximum allowed (15 minutes) for long-running tasks
+      timeoutSeconds: 900
+      # Set concurrency to handle parallel requests
+      containerConcurrency: 80"
+            # Enable detailed logging
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: PYTHONIOENCODING
+              value: "UTF-8"
           resources:
             limits:
               cpu: "1"
