@@ -1,28 +1,22 @@
 steps:
-  # Step 1: Build Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/pubsub-pull-app', '.' ]
+    args: [ 'build', '-t', 'gcr.io/others-459904/pubsub-pull-app', '.' ]
 
-  # Step 2: Push Docker image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'push', 'gcr.io/$PROJECT_ID/pubsub-pull-app' ]
+    args: [ 'push', 'gcr.io/others-459904/pubsub-pull-app' ]
 
-  # Step 3: Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: gcloud
+    entrypoint: 'gcloud'
     args:
       - 'run'
       - 'deploy'
       - 'pubsub-pull-app'
       - '--image'
-      - 'gcr.io/$PROJECT_ID/pubsub-pull-app'
+      - 'gcr.io/others-459904/pubsub-pull-app'
+      - '--region'
+      - 'europe-west1'
       - '--platform'
       - 'managed'
-      - '--region'
-      - 'us-central1'
       - '--allow-unauthenticated'
       - '--set-env-vars'
-      - 'PROJECT_ID=$PROJECT_ID,SUBSCRIPTION_ID=projects/others-459904/subscriptions/first-test1595-sub'
-
-images:
-  - 'gcr.io/$PROJECT_ID/pubsub-pull-app'
+      - 'PROJECT_ID=others-459904,SUBSCRIPTION_ID=first-test1595-sub'
