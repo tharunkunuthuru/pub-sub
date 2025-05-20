@@ -5,39 +5,40 @@ import time
 import os
 
 PROJECT_ID = os.environ.get("others-459904")
-SUBSCRIPTION_ID = os.environ.get("projects/others-459904/subscriptions/first-test1595-sub")
+SUBSCRIPTION_ID = os.environ.get("first-test1595-sub")
 
 app = Flask(__name__)
 
 def pull_messages():
+    print("✅ Pull thread started")
+    print(f"🔧 Using PROJECT_ID = {PROJECT_ID}, SUBSCRIPTION_ID = {SUBSCRIPTION_ID}")
+    
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(PROJECT_ID, SUBSCRIPTION_ID)
+    print(f"🧪 Subscribing to: {subscription_path}")
 
     while True:
-        response = subscriber.pull(
-            request={
-                "subscription": subscription_path,
-                "max_messages": 5,
-            },
-            timeout=10
-        )
-        for msg in response.received_messages:
-            print(f"Received: {msg.message.data.decode('utf-8')}")
-            subscriber.acknowledge(
-                request={
-                    "subscription": subscription_path,
-                    "ack_ids": [msg.ack_id],
-                }
+        try:
+            response = subscriber.pull(
+                request={"subscription": subscription_path, "max_messages": 5},
+                timeout=10
             )
-        time.sleep(10)
+            if not response.received_messages:
+                print("📭 No messages received. Retrying...")
+            for msg in response.received_messages:
+                print(f"📩 Received: {msg.message.data.decode('utf-8')}")
+                subscriber.acknowledge(
+                    request={"subscription": subscription_path, "ack_ids": [msg.ack_id]}
+                )
+        except Exception as e:
+            print(f"⚠️ Error during pull: {e}")
+        time.sleep(5)
 
-# Dummy endpoint for health check
 @app.route("/")
-def index():
+def home():
     return "Pull worker running!", 200
 
 if __name__ == "__main__":
-    # Start pull_messages in a background thread
+    print("🚀 Starting Flask app and pull thread...")
     threading.Thread(target=pull_messages, daemon=True).start()
-    # Start HTTP server to make Cloud Run happy
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
