@@ -24,7 +24,7 @@ steps:
       - 'GOOGLE_CLOUD_PROJECT=$PROJECT_ID,PUBSUB_SUBSCRIPTION_ID=YOUR_SUBSCRIPTION_ID' # Replace YOUR_SUBSCRIPTION_ID
       - '--min-instances'
       - '1'
-    # Add service account if needed and already created
+    # Optional: Specify service account if needed
     # securityContext:
     #   runAsUser: 'YOUR_SERVICE_ACCOUNT_EMAIL'
 
