@@ -7,7 +7,7 @@ from google.cloud import pubsub_v1
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
 
-PROJECT_ID = os.environ["GCP_PROJECT"]
+PROJECT_ID = os.environ.get("GCP_PROJECT", "others-459904")  # fallback if not set
 SUBSCRIPTION_ID = os.environ["SUBSCRIPTION_ID"]
 
 subscriber = pubsub_v1.SubscriberClient()
@@ -28,7 +28,6 @@ def pull_messages():
             logging.info(f"Received message: {received_message.message.data.decode('utf-8')}")
             ack_ids.append(received_message.ack_id)
 
-        # Acknowledge messages
         subscriber.acknowledge(
             request={
                 "subscription": subscription_path,
@@ -38,3 +37,7 @@ def pull_messages():
         return f"Acknowledged {len(ack_ids)} messages.\n"
     else:
         return "No messages to pull.\n"
+
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host='0.0.0.0', port=port)
