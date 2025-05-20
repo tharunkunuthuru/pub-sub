@@ -1,10 +1,3 @@
-steps:
-  - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'build', '-t', 'gcr.io/others-459904/pubsub-pull-app', '.' ]
-
-  - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'push', 'gcr.io/others-459904/pubsub-pull-app' ]
-
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'gcloud'
     args:
@@ -19,4 +12,4 @@ steps:
       - 'managed'
       - '--allow-unauthenticated'
       - '--set-env-vars'
-      - 'PROJECT_ID=others-459904,SUBSCRIPTION_ID=first-test1595-sub'
+      - 'PROJECT_ID=others-459904,SUBSCRIPTION_ID=your-subscription-id'
