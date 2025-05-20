@@ -1,4 +1,3 @@
-# cloudbuild.yaml
 steps:
   # Step 1: Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
@@ -14,25 +13,17 @@ steps:
     args:
       - 'run'
       - 'deploy'
-      - 'pubsub-puller-service' # Name of your Cloud Run service
+      - 'pubsub-puller-service' # Cloud Run service name
       - '--image=gcr.io/$PROJECT_ID/pubsub-puller:$COMMIT_SHA'
-      - '--region=us-central1' # Choose your desired region (e.g., us-central1, europe-west1)
+      - '--region=us-central1'
       - '--platform=managed'
-      - '--allow-unauthenticated' # Allow unauthenticated access (for easy testing)
-      # --- TEMPORARY CHANGE HERE: HARDCODE SUBSCRIPTION ID FOR DEBUGGING ---
-      - '--set-env-vars=GOOGLE_CLOUD_PROJECT=$PROJECT_ID,PUBSUB_SUBSCRIPTION_ID=my-first-test-1595-sub'
-      # --- END OF TEMPORARY CHANGE ---
-      - '--port=8080' # Ensure the port matches your application (Flask default is 8080)
-    env:
-      - 'CLOUDSDK_CORE_DISABLE_PROMPTS=1' # Disable prompts for non-interactive execution
+      - '--allow-unauthenticated'
+      - '--set-env-vars=GCP_PROJECT_ID=$PROJECT_ID,PUBSUB_SUBSCRIPTION_ID=my-first-test-1595-sub'
+      - '--port=8080'
+      - '--quiet'
 
 images:
   - 'gcr.io/$PROJECT_ID/pubsub-puller:$COMMIT_SHA'
 
 options:
   logging: CLOUD_LOGGING_ONLY
-
-# IMPORTANT: Remove or comment out the 'substitutions' block at the end if you
-# are solely relying on this hardcoded value for testing this specific problem.
-# If you leave the substitution in the Cloud Build trigger, it *might* override
-# this, but usually the --set-env-vars takes precedence.
