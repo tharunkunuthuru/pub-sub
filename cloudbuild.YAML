@@ -19,7 +19,9 @@ steps:
       - '--region=us-central1' # Choose your desired region (e.g., us-central1, europe-west1)
       - '--platform=managed'
       - '--allow-unauthenticated' # Allow unauthenticated access (for easy testing)
-      - '--set-env-vars=GOOGLE_CLOUD_PROJECT=$PROJECT_ID,PUBSUB_SUBSCRIPTION_ID=${_PUBSUB_SUBSCRIPTION_ID}'
+      # --- TEMPORARY CHANGE HERE: HARDCODE SUBSCRIPTION ID FOR DEBUGGING ---
+      - '--set-env-vars=GOOGLE_CLOUD_PROJECT=$PROJECT_ID,PUBSUB_SUBSCRIPTION_ID=my-first-test-1595-sub'
+      # --- END OF TEMPORARY CHANGE ---
       - '--port=8080' # Ensure the port matches your application (Flask default is 8080)
     env:
       - 'CLOUDSDK_CORE_DISABLE_PROMPTS=1' # Disable prompts for non-interactive execution
@@ -30,6 +32,7 @@ images:
 options:
   logging: CLOUD_LOGGING_ONLY
 
-# Substitutions for variables not directly available via default Cloud Build environment variables
-# You will define _PUBSUB_SUBSCRIPTION_ID when triggering the build or in your Cloud Build trigger.
-# For example, via gcloud builds submit --config cloudbuild.yaml . --substitutions=_PUBSUB_SUBSCRIPTION_ID=your-subscription-id
+# IMPORTANT: Remove or comment out the 'substitutions' block at the end if you
+# are solely relying on this hardcoded value for testing this specific problem.
+# If you leave the substitution in the Cloud Build trigger, it *might* override
+# this, but usually the --set-env-vars takes precedence.
