@@ -12,4 +12,5 @@
       - 'managed'
       - '--allow-unauthenticated'
       - '--set-env-vars'
-      - 'PROJECT_ID=others-459904,SUBSCRIPTION_ID=your-subscription-id'
+      - 'PROJECT_ID=others-459904,SUBSCRIPTION_ID='
+first-test1595-sub
