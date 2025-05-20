@@ -1,2 +1,3 @@
-google-cloud-pubsub==2.20.0
-flask==2.2.5
+flask==2.2.3
+google-cloud-pubsub==2.13.11
+gunicorn==20.1.0
